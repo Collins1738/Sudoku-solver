@@ -1,5 +1,5 @@
-## Sudoku-solver
-# Extremely fast sudoku-solver (uses minimal recursive backtracking and a lot more human-like sudoku techniques)
+# Sudoku-solver
+## Extremely fast sudoku-solver (uses minimal recursive backtracking and a lot more human-like sudoku techniques)
 
   This is a relatively fast sudoku solver (Leet Code Certified- Faster than 90% of all Leet Code Sudoku-solver submissions)
 
