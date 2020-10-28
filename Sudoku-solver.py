@@ -16,6 +16,8 @@ Sudoku solver
 
 '''
 
+from copy import deepcopy
+
 class Solution:
     
   def solveSudoku(self, board):
@@ -35,43 +37,45 @@ class Solution:
   def displayBoard(self):
     print(self.board)
     return
-      
+
+  def getNextGuessPos(self):
+    for y in range(9):
+      for x in range(9):
+        if self.board[y][x] == "." and len(self.dictA[str(y)+str(x)][0]) == 2:
+          return y, x
+
   def backTrack(self):
-    print("I backtracked")
-    prevBoard=self.board.copy()
-    prevDictA=self.dictA.copy()
-    count=0
-    while count<2:
-      self.board=prevBoard.copy()
-      self.dictA=prevDictA.copy()
-      y=0
-      while y<9:
-        x=0
-        breakAgain=False
-        while x<9:
-          if self.board[y][x]=="." and len(self.dictA[str(y)+str(x)][0])==2:
-            self.board[y][x]=str(self.dictA[str(y)+str(x)][0][count])
-            self.changes.append(str(y)+str(x))
-            self.toDel.append(str(y)+str(x))
-            breakAgain=True
-            break;
-          x+=1
-        if breakAgain==True:
-          break;
-        y+=1
+    self.backTrackUtil(deepcopy(self.board), deepcopy(self.dictA))
+
+  def backTrackUtil(self, board, dictA):
+    y, x = self.getNextGuessPos()
+    for i in self.dictA[str(y)+str(x)][0][::-1]:
+      self.board[y][x]=str(i)
+      self.changes.append(str(y)+str(x))
+      self.toDel.append(str(y)+str(x))
+      
       self.delDict()
       self.update()
       self.almostSolve()
-      
-      if self.wrong():
-        count+=1
-        continue;
-      if not self.solved():
-        self.backTrack()
-      return
-    return
+
+      if not self.wrong() and not self.solved():
+        self.backTrackUtil(deepcopy(self.board), deepcopy(self.dictA))
+        
+      if self.solved() and not self.wrong():
+        return
+        
+      if self.wrong:
+        self.board = deepcopy(board)
+        self.dictA = deepcopy(dictA)
   
   def wrong(self):
+    if not self.solved():
+      for y in range(0, 9):
+        for x in range(0, 9):
+          if self.board[y][x] == ".":
+            if self.dictA[str(y)+str(x)][0] == []:
+              return True
+
     for y in range (0, 9):
       myArr=[]
       for x in range(0,9):
@@ -653,5 +657,5 @@ sPuzzle4=[[".",".",".",".",".",".",".",".","."],[".",".",".",".",".","3",".","8"
 
 
 obj1=Solution()
-obj1.solveSudoku(sPuzzle4)
+obj1.solveSudoku(sPuzzle3)
 obj1.displayBoard()
